@@ -12,11 +12,16 @@ import sys
 # ====================== 1. Model Loading (Fixed Version) ======================
 current_dir = Path(__file__).parent.resolve()
 model_path = current_dir / "XGBoost.pkl"
-def load_model(model_path):
+model = None
+try:
+    # Use compatible loader
     with open(model_path, 'rb') as f:
-       model = pickle.load(f)
-    return model
-model=load_model('XGBoost.pkl')
+        unpickler = FixedUnpickler(f)
+        model = unpickler.load()
+    st.success(f"✅ Model loaded successfully! Path: {model_path}")
+except Exception as e:
+    st.error(f"❌ Model loading failed! Error: {str(e)}")
+    st.warning("Please check if the XGBoost.pkl file is complete or regenerate the model file")
  
 feature_names = ['D_Dimer','AST','Cl','Cough_Dur', 'Ca','LDH','MONO','CR']
 st.title("Predicting the severity of mycoplasma pneumoniae pneumonia")
