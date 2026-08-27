@@ -12,9 +12,11 @@ import sys
 # ====================== 1. Model Loading (Fixed Version) ======================
 current_dir = Path(__file__).parent.resolve()
 model_path = current_dir / "XGBoost.pkl"
-
-with open(model_path, 'rb') as f:
-    model = pickle.load(f)
+def load_model(model_path):
+    with open(model_path, 'rb') as f:
+       model = pickle.load(f)
+    return model
+model=load_model('XGBoost.pkl')
  
 feature_names = ['D_Dimer','AST','Cl','Cough_Dur', 'Ca','LDH','MONO','CR']
 st.title("Predicting the severity of mycoplasma pneumoniae pneumonia")
