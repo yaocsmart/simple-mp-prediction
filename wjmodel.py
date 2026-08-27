@@ -8,18 +8,7 @@ import os
 from pathlib import Path
 import pickle
 import sys
-class FixedUnpickler(pickle.Unpickler):
-    def find_class(self, module, name):
-        # Redirect old loss function path
-        if module == "sklearn.ensemble._gb_losses":
-            module = "sklearn._losses"
-        if module == "sklearn.ensemble.gradient_boosting":
-            from sklearn.ensemble import gradient_boosting
-            return getattr(gradient_boosting, name)
-        return super().find_class(module, name)
-# ====================== 1. Model Loading (Fixed Version) ======================
-current_dir = Path(__file__).parent.resolve()
-model_path = current_dir / "XGBoost.pkl"
+model_path = r"F:\WJblood\WJstreamlit\XGBoost.pkl"
 model = None
 try:
     # Use compatible loader
