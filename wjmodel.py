@@ -10,7 +10,7 @@ import pickle
 import sys
        
 current_dir = Path(__file__).parent.resolve()
-model_path = r"F:\WJblood\WJsteamlit\XGBoost.pkl"
+model_path = r"F:\\WJblood\WJsteamlit\XGBoost.pkl"
 def load_model(model_path):
     with open(model_path, 'rb') as f:
         model=pickle.load(f)
