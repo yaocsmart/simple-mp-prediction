@@ -9,11 +9,17 @@ from pathlib import Path
 import pickle
 import sys
 
+# ====================== 1. Model Loading (Fixed Version) ======================
 current_dir = Path(__file__).parent.resolve()
 model_path = current_dir / "XGBoost.pkl"
-with open('XGBoost.pkl','rb') as file:
-    model=pickle.load(file)
 
+model = None
+try:
+    # Use compatible loader
+    with open(model_path, 'rb') as f:
+        unpickler = FixedUnpickler(f)
+        model = unpickler.load()
+ 
 feature_names = ['D_Dimer','AST','Cl','Cough_Dur', 'Ca','LDH','MONO','CR']
 st.title("Predicting the severity of mycoplasma pneumoniae pneumonia")
 st.write('Please enter the following clinical indicators to predict the severity of mycoplasma pneumoniae pneumonia:')
