@@ -24,17 +24,6 @@ class FixedUnpickler(pickle.Unpickler):
 current_dir = Path(__file__).parent.resolve()
 model_path = current_dir / "XGBoost.pkl"
 
-model = None
-try:
-    # Use compatible loader
-    with open(model_path, 'rb') as f:
-        unpickler = FixedUnpickler(f)
-        model = unpickler.load()
-    st.success(f"✅ Model loaded successfully! Path: {model_path}")
-except Exception as e:
-    st.error(f"❌ Model loading failed! Error: {str(e)}")
-    st.warning("Please check if the GBDT.pkl file is complete or regenerate the model file")
-
 feature_names = ['D_Dimer','AST','Cl','Cough_Dur', 'Ca','LDH','MONO','CR']
 st.title("Predicting the severity of mycoplasma pneumoniae pneumonia")
 st.write('Please enter the following clinical indicators to predict the severity of mycoplasma pneumoniae pneumonia:')
