@@ -8,30 +8,13 @@ import os
 from pathlib import Path
 import pickle
 import sys
-
-class FixedUnpickler(pickle.Unpickler):
-    def find_class(self, module, name):
-        # Redirect old loss function path
-        if module == "sklearn.ensemble._gb_losses":
-            module = "sklearn._losses"
-        if module == "sklearn.ensemble.xgboost":
-            from sklearn.ensemble import xgboost
-            return getattr(xgboost, name)
-        return super().find_class(module, name)
-        
+       
 current_dir = Path(__file__).parent.resolve()
-model_path = current_dir / "XGBoost.pkl"
-
-model = None
-try:
-    # Use compatible loader
+model_path = r"F:\WJblood\WJsteamlit\XGBoost.pkl"
+def load_model(model_path):
     with open(model_path, 'rb') as f:
-        unpickler = FixedUnpickler(f)
-        model = unpickler.load()
-    st.success(f"✅ Model loaded successfully! Path: {model_path}")
-except Exception as e:
-    st.error(f"❌ Model loading failed! Error: {str(e)}")
-    st.warning("Please check if the XGBoost.pkl file is complete or regenerate the model file")
+        model=pickle.load(f)
+model = load_model(XGBoost.pkl)
 
 st.title("Predicting the severity of mycoplasma pneumoniae pneumonia")
 feature_names = ['D_Dimer','AST','Cl','Cough_Dur', 'Ca','LDH','MONO','CR']
