@@ -14,7 +14,7 @@ model_path = r"F:\WJblood\WJsteamlit\XGBoost.pkl"
 def load_model(model_path):
     with open(model_path, 'rb') as f:
         model=pickle.load(f)
-model = load_model(XGBoost.pkl)
+model = load_model('XGBoost.pkl')
 
 st.title("Predicting the severity of mycoplasma pneumoniae pneumonia")
 feature_names = ['D_Dimer','AST','Cl','Cough_Dur', 'Ca','LDH','MONO','CR']
