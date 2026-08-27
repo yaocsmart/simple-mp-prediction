@@ -22,21 +22,20 @@ try:
 except Exception as e:
     st.error(f"❌ Model loading failed! Error: {str(e)}")
     st.warning("Please check if the XGBoost.pkl file is complete or regenerate the model file")
- 
-feature_names = ['D_Dimer','AST','Cl','Cough_Dur', 'Ca','LDH','MONO','CR']
+
 st.title("Predicting the severity of mycoplasma pneumoniae pneumonia")
+feature_names = ['D_Dimer','AST','Cl','Cough_Dur', 'Ca','LDH','MONO','CR']
 st.write('Please enter the following clinical indicators to predict the severity of mycoplasma pneumoniae pneumonia:')
-input_D_Dimer = st.number_input("D-Dimer(D-Dimer mg/L):", min_value=0.0, max_value=1.0, value=0.5, format="%.2f")
-input_AST = st.number_input("AST(aspartate aminotransferase U/L):", min_value=0.0, max_value=1200.0, value=20.00, format="%.2f")
-input_Cl = st.number_input("Cl(Chloride mmol/L):", min_value=50.0, max_value=150.0, value=80.00, format="%.2f")
-input_Cough_Dur = st.number_input("Cough_Dur(Duration of cough days):", min_value=0.0, max_value=30.0, value=5.00, format="%.1f")
-input_LDH = st.number_input("LDH(lactate dehydrogenase U/L):", min_value=100.0, max_value=500.0, value=300.00, format="%.2f")
-input_Ca = st.number_input("Ca(Calcium mmol/L):", min_value=1.0, max_value=5.0, value=2.00, format="%.2f")
-input_MONO = st.number_input("MONO(Monocyte count 10^9/L):", min_value=0.01, max_value=1.50, value=0.50, format="%.2f")
-input_CR = st.number_input("CR(Creatinine μmol/L):", min_value=10.00, max_value=60.00, value=33.00, format="%.2f")
-feature_values = [
-    input_Cough_Dur,input_D_Dimer,input_AST,input_Cl,input_LDH,input_Ca,input_MONO,input_CR]
-features = np.array([feature_values])
+D_Dimer = st.number_input("D-Dimer(D-Dimer mg/L):", min_value=0.0, max_value=1.0, value=0.5, format="%.2f")
+AST = st.number_input("AST(aspartate aminotransferase U/L):", min_value=0.0, max_value=1200.0, value=20.00, format="%.2f")
+Cl = st.number_input("Cl(Chloride mmol/L):", min_value=50.0, max_value=150.0, value=80.00, format="%.2f")
+Cough_Dur = st.number_input("Cough_Dur(Duration of cough days):", min_value=0.0, max_value=30.0, value=5.00, format="%.1f")
+LDH = st.number_input("LDH(lactate dehydrogenase U/L):", min_value=100.0, max_value=500.0, value=300.00, format="%.2f")
+Ca = st.number_input("Ca(Calcium mmol/L):", min_value=1.0, max_value=5.0, value=2.00, format="%.2f")
+MONO = st.number_input("MONO(Monocyte count 10^9/L):", min_value=0.01, max_value=1.50, value=0.50, format="%.2f")
+CR = st.number_input("CR(Creatinine μmol/L):", min_value=10.00, max_value=60.00, value=33.00, format="%.2f")
+feature_values = [Cough_Dur,D_Dimer,AST,Cl,LDH,Ca,MONO,CR]
+features = np.array([feature_values], dtype=np.float64)
 
 if st.button("Predict"):
     if model is None:
