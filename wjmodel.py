@@ -5,9 +5,36 @@ import pandas as pd
 import shap
 import matplotlib.pyplot as plt
 import os
-new_directory = "F:\\WJblood\WJsteamlit"
-os.chdir(new_directory)
-model = joblib.load('XGBoost.pkl')
+from pathlib import Path
+import pickle
+import sys
+# ====================== Fix: Compatible with older sklearn models ======================
+# Fix No module named 'sklearn.ensemble._gb_losses'
+class FixedUnpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        # Redirect old loss function path
+        if module == "sklearn.ensemble._gb_losses":
+            module = "sklearn._losses"
+        if module == "sklearn.ensemble.gradient_boosting":
+            from sklearn.ensemble import gradient_boosting
+            return getattr(gradient_boosting, name)
+        return super().find_class(module, name)
+
+# ====================== 1. Model Loading (Fixed Version) ======================
+current_dir = Path(__file__).parent.resolve()
+model_path = current_dir / "XGBoost.pkl"
+
+model = None
+try:
+    # Use compatible loader
+    with open(model_path, 'rb') as f:
+        unpickler = FixedUnpickler(f)
+        model = unpickler.load()
+    st.success(f"✅ Model loaded successfully! Path: {model_path}")
+except Exception as e:
+    st.error(f"❌ Model loading failed! Error: {str(e)}")
+    st.warning("Please check if the GBDT.pkl file is complete or regenerate the model file")
+
 feature_names = ['D_Dimer','AST','Cl','Cough_Dur', 'Ca','LDH','MONO','CR']
 st.title("Predicting the severity of mycoplasma pneumoniae pneumonia")
 st.write('Please enter the following clinical indicators to predict the severity of mycoplasma pneumoniae pneumonia:')
