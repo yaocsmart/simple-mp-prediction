@@ -5,7 +5,7 @@ import pandas as pd
 import shap
 import matplotlib.pyplot as plt
 import os
-new_directory = "F:/WJblood/WJsteamlit"
+new_directory = "F:\\WJblood\WJsteamlit"
 os.chdir(new_directory)
 model = joblib.load('XGBoost.pkl')
 feature_names = ['D_Dimer','AST','Cl','Cough_Dur', 'Ca','LDH','MONO','CR']
