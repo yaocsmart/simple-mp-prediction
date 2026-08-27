@@ -14,9 +14,9 @@ class FixedUnpickler(pickle.Unpickler):
         # Redirect old loss function path
         if module == "sklearn.ensemble._gb_losses":
             module = "sklearn._losses"
-        if module == "sklearn.ensemble.gradient_boosting":
-            from sklearn.ensemble import gradient_boosting
-            return getattr(gradient_boosting, name)
+        if module == "sklearn.ensemble.xgboost":
+            from sklearn.ensemble import xgboost
+            return getattr(xgboost, name)
         return super().find_class(module, name)
         
 current_dir = Path(__file__).parent.resolve()
