@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 import pickle
 import sys
-model_path = r"F:\WJblood\WJstreamlit\XGBoost.pkl"
+model_path = r"F:\WJblood\WJsteamlit\XGBoost.pkl"
 model = None
 try:
     # Use compatible loader
