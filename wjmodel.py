@@ -13,12 +13,9 @@ import sys
 current_dir = Path(__file__).parent.resolve()
 model_path = current_dir / "XGBoost.pkl"
 
-model = None
-try:
-    # Use compatible loader
-    with open(model_path, 'rb') as f:
-        unpickler = FixedUnpickler(f)
-        model = unpickler.load()
+with open(model_path, 'rb') as f:
+    unpickler = FixedUnpickler(f)
+    model = unpickler.load()
  
 feature_names = ['D_Dimer','AST','Cl','Cough_Dur', 'Ca','LDH','MONO','CR']
 st.title("Predicting the severity of mycoplasma pneumoniae pneumonia")
