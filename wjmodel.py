@@ -14,7 +14,7 @@ current_dir = Path(__file__).parent.resolve()
 model_path = current_dir / "XGBoost.pkl"
 
 with open(model_path, 'rb') as f:
-    model = pickle.load()
+    model = pickle.load(f)
  
 feature_names = ['D_Dimer','AST','Cl','Cough_Dur', 'Ca','LDH','MONO','CR']
 st.title("Predicting the severity of mycoplasma pneumoniae pneumonia")
