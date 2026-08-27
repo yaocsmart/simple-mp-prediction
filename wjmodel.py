@@ -37,29 +37,58 @@ input_CR = st.number_input("CR(Creatinine μmol/L):", min_value=10.00, max_value
 feature_values = [
     input_Cough_Dur,input_D_Dimer,input_AST,input_Cl,input_LDH,input_Ca,input_MONO,input_CR]
 features = np.array([feature_values])
+
 if st.button("Predict"):
-   Predicted_Degree = model.predict(features)[0]
-   predicted_proba = model.predict_proba(features)[0]
-    
-   probability = predicted_proba[Predicted_Degree] * 100
-   if Predicted_Degree == 1:
-         st.write(f"Predicted Degree Severe")
-         st.write(f"**Prediction Probabilities:** {predicted_proba}")
-         st.write( f"According to our model, you have a high risk of severity mycoplasma pneumoniae pneumonia(SMMP). ")
-         st.write(f"The model predicts that your probability of having SMMP disease is {probability:.1f}%. ")
-   else:
-        st.write(f"Predicted Degree Mild")
-        st.write(f"**Prediction Probabilities:** {predicted_proba}")
-        st.write( f"According to our model, you have a low risk of severity mycoplasma pneumoniae pneumonia(SMMP). ")
-        st.write( f"The model predicts that your probability of not having SMMP disease is {probability:.1f}%. ")
+    if model is None:
+        st.error("❌ Prediction failed: Model not loaded, please check the XGBoost.pkl file")
+    elif not hasattr(model, "predict"):
+        st.error("❌ Invalid model: Loaded object is not a valid sklearn model")
+    else:
+        try:
+            # Core prediction
+            Predicted_Degree = model.predict(features)[0]
+            predicted_proba = model.predict_proba(features)[0]
+            probability = predicted_proba[Predicted_Degree] * 100
 
-   explainer = shap.TreeExplainer(model)
-   shap_values = explainer.shap_values(pd.DataFrame([feature_values], columns=feature_names))
+            # Display results
+            if Predicted_Degree == 1:
+                st.success(f"✅ Prediction Result: Severe")
+                st.write(f"**Severe Probability: {probability:.1f}%**")
+            else:
+                st.success(f"✅ Prediction Result: Mild")
+                st.write(f"**Mild Probability: {probability:.1f}%**")
 
-   shap.force_plot(explainer.expected_value, shap_values[0], pd.DataFrame([feature_values], columns=feature_names), matplotlib=True)
-   plt.savefig("shap_plot.png", bbox_inches='tight', dpi=1200)
+            st.write(f"Full Probability (Mild/Severe): {np.round(predicted_proba, 4)}")
 
-   st.image("shap_plot.png")
+            # ====================== 4. SHAP Visualization ======================
+            try:
+                explainer = shap.TreeExplainer(model)
+                df_input = pd.DataFrame([feature_values], columns=feature_names)
+                shap_values = explainer.shap_values(df_input)
 
+                if isinstance(shap_values, list):
+                    shap_val = shap_values[1][0]
+                    base_val = explainer.expected_value[1]
+                else:
+                    shap_val = shap_values[0]
+                    base_val = explainer.expected_value
+
+                shap.force_plot(
+                    base_val,
+                    shap_val,
+                    df_input,
+                    matplotlib=True,
+                    show=False
+                )
+                plt.tight_layout()
+                plt.savefig("shap_force_plot.png", bbox_inches="tight", dpi=300)
+                plt.close()
+                st.image("shap_force_plot.png", caption="SHAP Feature Contribution Explanation")
+            except Exception as shap_err:
+                st.warning(f"⚠️ SHAP plot generation failed: {str(shap_err)[:100]}")
+
+        except Exception as pred_err:
+            st.error(f"❌ Prediction failed: {str(pred_err)}")
+            st.info(f"Debug info: Model type={type(model)}, Input shape={features.shape}")
    
 
