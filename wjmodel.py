@@ -9,7 +9,7 @@ from pathlib import Path
 import pickle
 import sys
 
-model = load_model('XGBoost.pkl')
+model = joblib.load('XGBoost.pkl')
 
 st.title("Predicting the severity of mycoplasma pneumoniae pneumonia")
 feature_names = ['D_Dimer','AST','Cl','Cough_Dur', 'Ca','LDH','MONO','CR']
