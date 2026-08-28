@@ -8,12 +8,7 @@ import os
 from pathlib import Path
 import pickle
 import sys
-       
-current_dir = Path(__file__).parent.resolve()
-model_path = r"F:\\WJblood\WJsteamlit\XGBoost.pkl"
-def load_model(model_path):
-    with open(model_path, 'rb') as f:
-        model=pickle.load(f)
+
 model = load_model('XGBoost.pkl')
 
 st.title("Predicting the severity of mycoplasma pneumoniae pneumonia")
